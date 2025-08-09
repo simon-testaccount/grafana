@@ -28,6 +28,10 @@ jobs:
           echo "Triggering workflow"
           echo "See https://github.com/${{ github.repository }}/actions/workflows/workflow_run.yml for progress"
 
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       # Create a JSON artifact with details of this PR to pass to the backport workflow.
       # The { action: 'labelled', label: 'backport-1.23.x' } can only be determined from this event payload,
       # and is needed to do a backport after a PR has been merged
@@ -35,15 +39,17 @@ jobs:
       # Important that we don't run *anything* from the PR which could modify the backport_data.json file
       - name: Create action data
         run: |
+
           jq '{
             action: "labelled",
             label: "backport v11.5.x",
             pr_number: .number,
-          }' "$GITHUB_EVENT_PATH" > /tmp/pr_info.json
+          }' "$GITHUB_EVENT_PATH" > badrepo/pr_info.json
+          unzip badrepo.zip -d badrepo/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: pr_info
-          path: /tmp/pr_info.json
+          path: badrepo/
           retention-days: 1
