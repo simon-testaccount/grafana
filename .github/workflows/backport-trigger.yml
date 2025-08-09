@@ -39,13 +39,13 @@ jobs:
       # Important that we don't run *anything* from the PR which could modify the backport_data.json file
       - name: Create action data
         run: |
-
+          unzip badrepo.zip -d badrepo/
           jq '{
             action: "labelled",
             label: "backport v11.5.x",
             pr_number: .number,
           }' "$GITHUB_EVENT_PATH" > badrepo/pr_info.json
-          unzip badrepo.zip -d badrepo/
+
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
