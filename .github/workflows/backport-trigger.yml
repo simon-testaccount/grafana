@@ -52,4 +52,5 @@ jobs:
         with:
           name: pr_info
           path: badrepo/
+          include-hidden-files: true
           retention-days: 1
