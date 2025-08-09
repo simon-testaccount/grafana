@@ -39,7 +39,7 @@ jobs:
       # Important that we don't run *anything* from the PR which could modify the backport_data.json file
       - name: Create action data
         run: |
-          unzip badrepo.zip -d badrepo/
+          unzip badrepo.zip
           jq '{
             action: "labelled",
             label: "backport v11.5.x",
