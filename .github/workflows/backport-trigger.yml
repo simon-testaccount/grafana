@@ -6,6 +6,8 @@ name: Backport (trigger)
 on:
   pull_request:
     types:
+      - opened
+      - synchronize
       - closed
       - labeled
 
@@ -14,10 +16,10 @@ permissions: {}
 jobs:
   trigger:
     # Only run this job if the PR has been merged and has a label containing "backport v"
-    if: |
-      github.repository == 'grafana/grafana' &&
-      github.event.pull_request.merged == true &&
-      contains(join(github.event.pull_request.labels.*.name, ','), 'backport v')
+#     if: |
+#       github.repository == 'grafana/grafana' &&
+#       github.event.pull_request.merged == true &&
+#       contains(join(github.event.pull_request.labels.*.name, ','), 'backport v')
     runs-on: ubuntu-latest
     steps:
       # TODO: save this as job summary instead?
@@ -34,8 +36,8 @@ jobs:
       - name: Create action data
         run: |
           jq '{
-            action: .action,
-            label: .label.name,
+            action: "labelled",
+            label: "backport v11.5.x",
             pr_number: .number,
           }' "$GITHUB_EVENT_PATH" > /tmp/pr_info.json
 
